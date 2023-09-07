@@ -20,7 +20,6 @@
 #include <QLabel>
 #include <QHeaderView>
 #include <QScrollArea>
-#include <QSplitter>
 
 /*
  * 编辑状态栏
@@ -55,12 +54,10 @@ void MainWindow::initLayout()
     QSplitter * splitter = new QSplitter;
     splitter->addWidget(leftWidget);
     splitter->addWidget(rightWidget);
-
-//    wrappedLayout->addWidget(leftWidget);
-//    wrappedLayout->addWidget(rightWidget);
-//    QWidget * centralWidget = new QWidget;
-//    centralWidget->setLayout(wrappedLayout);
     setCentralWidget(splitter);
+    //设置右侧部件的splitter
+    bySplitter = new QSplitter(Qt::Vertical);
+    rightLayout->addWidget(bySplitter);
 }
 /*
  * 用读取的表格数据加载表格界面
@@ -193,6 +190,6 @@ void MainWindow::getMeanVar()
 void MainWindow::openHistogram()
 {
     Histogram * histogram = new Histogram(cursorColumnIndex, data);
-    rightLayout->addWidget(histogram);
+    bySplitter->addWidget(histogram);
 
 }

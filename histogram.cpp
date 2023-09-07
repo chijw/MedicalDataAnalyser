@@ -1,5 +1,4 @@
 #include "histogram.h"
-#include "ui_histogram.h"
 //qtCharts库
 #include "QtCharts/QChartView"
 #include "QtCharts/QBarSeries"
@@ -10,6 +9,7 @@
 #include <QInputDialog>
 #include <QLayout>
 #include <QSpacerItem>
+#include <QPushButton>
 
 Histogram::Histogram(int cursorColumnIndex, CsvData data, QWidget *parent) :
     QWidget(parent)

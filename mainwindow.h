@@ -8,7 +8,7 @@
 #include <qpushbutton.h>
 #include <QStandardItemModel>
 #include <QVBoxLayout>
-
+#include <QSplitter>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -42,7 +42,7 @@ private:
     QPushButton * updateButton;
     QStandardItemModel * model;
     int cursorColumnIndex;
-
+    QSplitter * bySplitter;
 
 };
 #endif // MAINWINDOW_H
