@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "histogram.h"
-//Eigen库
 #include "csvdata.h"
+//Eigen库
 #include "Eigen/Dense"
 #include "rowfeature.hpp"
 #include <vector>
@@ -149,16 +149,16 @@ void MainWindow::openFile()
 void MainWindow::handleHeaderClicked(int col)
 {
     //若不为id列，发射列被选中信号，启用数据更新按钮
-    if(col)
+    if(col >= 1)
     {
         updateButton->setEnabled(true);
-        emit columnSelected(col);
     }
     //否则，禁用数据更新按钮
     else
     {
         updateButton->setEnabled(false);
     }
+    emit columnSelected(col);
 }
 /*
  * 获取平均值和方差
@@ -170,7 +170,7 @@ void MainWindow::getMeanVar()
     {
         for (const auto & p : data.AllPerson())
         {
-            row.emplace_back(p.Data().at(cursorColumnIndex - 1));
+            row.emplace_back(p.Data().at(cursorColumnIndex - 2));
         }
     }
     else
@@ -190,6 +190,9 @@ void MainWindow::getMeanVar()
 void MainWindow::openHistogram()
 {
     Histogram * histogram = new Histogram(cursorColumnIndex, data);
-    bySplitter->addWidget(histogram);
+    if(cursorColumnIndex >= 1)
+    {
+        bySplitter->addWidget(histogram);
+    }
 
 }
