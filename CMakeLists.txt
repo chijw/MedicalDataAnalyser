@@ -31,6 +31,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         histogram.h histogram.cpp
         rowfeature.cpp
         scattergram.h scattergram.cpp
+        newtableview.h newtableview.cpp
 
 
          )

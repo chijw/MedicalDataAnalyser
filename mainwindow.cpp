@@ -19,7 +19,7 @@
 #include <QStatusBar>
 #include <QLabel>
 #include <QHeaderView>
-#include <QScrollArea>
+#include <QToolTip>
 
 /*
  * 编辑状态栏
@@ -59,33 +59,12 @@ void MainWindow::initLayout()
     bySplitter = new QSplitter(Qt::Vertical);
     rightLayout->addWidget(bySplitter);
 }
-/*
- * 用读取的表格数据加载表格界面
+/* TODO
+ * TODO 用读取的表格数据加载表格界面
 */
-void MainWindow::showTableWindow(CsvData data)
+void MainWindow::showTableWindow()
 {
-    //设置model
-    model = new QStandardItemModel;
-    model->setHorizontalHeaderLabels(data.Titles());
-    for (auto & p : data.AllPerson())
-    {
-        QVector<QStandardItem *> itemRow;
-        QStandardItem * idItem = new QStandardItem(p.Id());
-        itemRow.emplaceBack(idItem);
-        QStandardItem * diagItem = new QStandardItem(p.Diagnosis());
-        itemRow.emplaceBack(diagItem);
-        for (auto & ele : p.Data())
-        {
-            QStandardItem * it = new QStandardItem(QString::number(ele));
-            itemRow.emplaceBack(it);
-        }
-        model->appendRow(itemRow);
-    }
-    //设置tabelView
-    tableView = new QTableView;
-    tableView->setModel(model);
-    QItemSelectionModel * selectionModel = new QItemSelectionModel(model);
-    tableView->setSelectionModel(selectionModel);
+    tableView = new NewTableView(data);
     //布局控制
     leftLayout->addWidget(tableView);
     //完成相关信号的连接
@@ -94,21 +73,21 @@ void MainWindow::showTableWindow(CsvData data)
         cursorColumnIndex = col;
     });
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::getMeanVar);
+
 }
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),cursorColumnIndex(-1)
     , ui(new Ui::MainWindow)
 {
     //初始化窗口
     ui->setupUi(this);
     resize(1200,800);
-    //默认将列指针置为 -1
-    cursorColumnIndex = -1;
     initLayout();
     initStatusBar();
     //打开文件
     connect(ui->actionimport,&QAction::triggered,this,&MainWindow::openFile);
     connect(ui->actionDrawHistogram,&QAction::triggered,this,&MainWindow::openHistogram);
+    connect(ui->actionDrawScattergram,&QAction::triggered,this,&MainWindow::openScattergram);
 }
 MainWindow::~MainWindow()
 {
@@ -135,7 +114,7 @@ void MainWindow::openFile()
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         data = CsvData(&file);
-        showTableWindow(data);
+        showTableWindow();
         if (!data.IsValid())
         {
             QMessageBox::information(this,"提示","部分数据丢失或格式有误");
@@ -194,5 +173,8 @@ void MainWindow::openHistogram()
     {
         bySplitter->addWidget(histogram);
     }
+}
+void MainWindow::openScattergram()
+{
 
 }

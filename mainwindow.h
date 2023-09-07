@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "csvdata.h"
+#include "newtableview.h"
 #include <QMainWindow>
 #include <qtableview.h>
 #include <QLabel>
@@ -9,6 +10,7 @@
 #include <QStandardItemModel>
 #include <QVBoxLayout>
 #include <QSplitter>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -20,7 +22,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void showTableWindow(CsvData data);
+    void showTableWindow();
     void initStatusBar();
     void initLayout();
 signals:
@@ -30,19 +32,19 @@ public slots:
     void handleHeaderClicked(int);
     void getMeanVar();
     void openHistogram();
-
+    void openScattergram();
 private:
     Ui::MainWindow *ui;
     CsvData data;
     QVBoxLayout * leftLayout;
-    QVBoxLayout * rightLayout;
-    QTableView * tableView;
+    QVBoxLayout * rightLayout;   
+    //用于创建tableview
+    NewTableView * tableView;
+    QStandardItemModel * model;
     QLabel * meanValue;
     QLabel * varianceValue;
     QPushButton * updateButton;
-    QStandardItemModel * model;
     int cursorColumnIndex;
     QSplitter * bySplitter;
-
 };
 #endif // MAINWINDOW_H

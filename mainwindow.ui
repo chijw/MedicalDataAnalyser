@@ -37,6 +37,7 @@
     </property>
     <addaction name="actionDrawHistogram"/>
     <addaction name="separator"/>
+    <addaction name="actionDrawScattergram"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -50,6 +51,11 @@
   <action name="actionDrawHistogram">
    <property name="text">
     <string>直方图</string>
+   </property>
+  </action>
+  <action name="actionDrawScattergram">
+   <property name="text">
+    <string>散点图</string>
    </property>
   </action>
  </widget>
