@@ -8,11 +8,12 @@
 #include "QtCharts/QValueAxis"
 
 #include <QInputDialog>
-Histogram::Histogram(int cursorColumnIndex, CsvData data, QLayout * parentLayout, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Histogram)
+#include <QLayout>
+#include <QSpacerItem>
+
+Histogram::Histogram(int cursorColumnIndex, CsvData data, QWidget *parent) :
+    QWidget(parent)
 {
-    ui->setupUi(this);
     if (cursorColumnIndex != -1)
     {
         //创建图表和视图
@@ -69,7 +70,26 @@ Histogram::Histogram(int cursorColumnIndex, CsvData data, QLayout * parentLayout
             histogramSeries->setBarWidth(1);
             chart->setTitle("Frequency Distribution Histogram");
             chartView->setRenderHint(QPainter::Antialiasing);
-            parentLayout->addWidget(chartView);
+            QHBoxLayout * chartLayout = new QHBoxLayout;
+            chartLayout->addWidget(chartView);
+            //设置按钮布局
+            QHBoxLayout * buttonLayout = new QHBoxLayout;
+            QSpacerItem * spacer = new QSpacerItem(400, 20, QSizePolicy::Maximum, QSizePolicy::Minimum);
+            buttonLayout->addItem(spacer);
+            QPushButton * normalDistribution = new QPushButton;
+            normalDistribution->setText("正态曲线");
+            buttonLayout->addWidget(normalDistribution);
+            QPushButton * closeBtn = new QPushButton;
+            closeBtn->setText("关闭");
+            buttonLayout->addWidget(closeBtn);
+
+            QVBoxLayout * mainLayout = new QVBoxLayout(this);
+            mainLayout->addLayout(chartLayout);
+            mainLayout->addLayout(buttonLayout);
+
+            connect(closeBtn, &QPushButton::clicked, [=](){
+                delete(this);
+            });
         }
         else
         {
@@ -100,12 +120,11 @@ Histogram::Histogram(int cursorColumnIndex, CsvData data, QLayout * parentLayout
             histogramSeries->setBarWidth(0.4);
             chart->setTitle("Frequency Distribution Histogram");
             chartView->setRenderHint(QPainter::Antialiasing);
-            parentLayout->addWidget(chartView);
         }
     }
 }
 
 Histogram::~Histogram()
 {
-    delete ui;
+
 }

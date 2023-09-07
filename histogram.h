@@ -9,16 +9,14 @@ namespace Ui {
 class Histogram;
 }
 
-class Histogram : public QDialog
+class Histogram : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Histogram(int cursorColumnIndex, CsvData data, QLayout * parentLayout, QWidget *parent = nullptr);
+    explicit Histogram(int cursorColumnIndex, CsvData data,  QWidget *parent = nullptr);
     ~Histogram();
 
-private:
-    Ui::Histogram *ui;
 };
 
 #endif // HISTOGRAM_H

@@ -19,6 +19,8 @@
 #include <QStatusBar>
 #include <QLabel>
 #include <QHeaderView>
+#include <QScrollArea>
+#include <QSplitter>
 
 /*
  * 编辑状态栏
@@ -46,14 +48,19 @@ void MainWindow::initStatusBar()
 */
 void MainWindow::initLayout()
 {
-    leftLayout = new QVBoxLayout;
-    rightLayout = new QVBoxLayout;
-    QHBoxLayout * wrappedLayout = new QHBoxLayout;
-    wrappedLayout->addLayout(leftLayout);
-    wrappedLayout->addLayout(rightLayout);
-    QWidget * centralWidget = new QWidget;
-    centralWidget->setLayout(wrappedLayout);
-    setCentralWidget(centralWidget);
+    QWidget * leftWidget = new QWidget;
+    QWidget * rightWidget = new QWidget;
+    leftLayout = new QVBoxLayout(leftWidget);
+    rightLayout = new QVBoxLayout(rightWidget);
+    QSplitter * splitter = new QSplitter;
+    splitter->addWidget(leftWidget);
+    splitter->addWidget(rightWidget);
+
+//    wrappedLayout->addWidget(leftWidget);
+//    wrappedLayout->addWidget(rightWidget);
+//    QWidget * centralWidget = new QWidget;
+//    centralWidget->setLayout(wrappedLayout);
+    setCentralWidget(splitter);
 }
 /*
  * 用读取的表格数据加载表格界面
@@ -185,5 +192,7 @@ void MainWindow::getMeanVar()
 */
 void MainWindow::openHistogram()
 {
-    Histogram histogram(cursorColumnIndex, data, rightLayout);
+    Histogram * histogram = new Histogram(cursorColumnIndex, data);
+    rightLayout->addWidget(histogram);
+
 }
