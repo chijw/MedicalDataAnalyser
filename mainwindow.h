@@ -35,7 +35,7 @@ public slots:
     void getMeanVar();
     void openHistogram();
     void openScattergram();
-
+    void drawCurveGraph();
 private:
     Ui::MainWindow *ui;
     CsvData data;

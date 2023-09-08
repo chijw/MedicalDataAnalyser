@@ -8,6 +8,7 @@
 #include <QInputDialog>
 #include <iostream>
 
+//布局处理
 void Scattergram::initScattergram()
 {   
     chart->setTitle("散点图");
@@ -28,37 +29,9 @@ void Scattergram::initScattergram()
         delete(this);
     });
 }
-Scattergram::Scattergram(int idxX, int idxY, CsvData data, QWidget *parent)
-    : QWidget{parent}
+Scattergram::Scattergram(std::vector<float> listX, std::vector<float> listY, QStringList titles, QWidget *parent)
+    : QWidget{parent}, numListX(listX), numListY(listY)
 {
-    if (idxX != 1)
-    {
-        for (const auto & p : data.AllPerson())
-        {
-            numListX.emplace_back(p.Data().at(idxX - 2));
-        }
-    }
-    else
-    {
-        for (const auto & p : data.AllPerson())
-        {
-            numListX.emplace_back(data.MapList()[p.Diagnosis()]);
-        }
-    }
-    if (idxY != 1)
-    {
-        for (const auto & p : data.AllPerson())
-        {
-            numListY.emplace_back(p.Data().at(idxY - 2));
-        }
-    }
-    else
-    {
-        for (const auto & p : data.AllPerson())
-        {
-            numListY.emplace_back(data.MapList()[p.Diagnosis()]);
-        }
-    }
     QScatterSeries * scatterSeries = new QScatterSeries;
     for (int i = 0; i < numListX.size(); ++i)
     {
@@ -75,8 +48,8 @@ Scattergram::Scattergram(int idxX, int idxY, CsvData data, QWidget *parent)
     //扩充一定的显示范围
     axisX->setRange(xMinValue / 2, xMaxValue + xMinValue / 2);
     axisY->setRange(yMinValue / 2, yMaxValue + yMinValue / 2);
-    axisX->setTitleText(data.Titles().at(idxX));
-    axisY->setTitleText(data.Titles().at(idxY));
+    axisX->setTitleText(titles[0]);
+    axisY->setTitleText(titles[1]);
     chart->addAxis(axisX, Qt::AlignBottom);
     chart->addAxis(axisY, Qt::AlignLeft);
     scatterSeries->attachAxis(axisX);

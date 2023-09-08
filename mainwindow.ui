@@ -38,6 +38,7 @@
     <addaction name="actionDrawHistogram"/>
     <addaction name="separator"/>
     <addaction name="actionDrawScattergram"/>
+    <addaction name="actionDrawCurve"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -56,6 +57,11 @@
   <action name="actionDrawScattergram">
    <property name="text">
     <string>散点图</string>
+   </property>
+  </action>
+  <action name="actionDrawCurve">
+   <property name="text">
+    <string>曲线图(拟合)</string>
    </property>
   </action>
  </widget>

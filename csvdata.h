@@ -20,6 +20,7 @@ public:
     QStringList Titles() const;
     PersonList AllPerson() const;
     const QMap<QString,int> MapList() const;
+    std::vector<float> getColData(int idx) const;
 private:
     //存放数据的名称
     QStringList titles;

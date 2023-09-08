@@ -50,3 +50,22 @@ const QMap<QString,int> CsvData::MapList() const
 {
     return mapList;
 }
+std::vector<float> CsvData::getColData(int idx) const
+{
+    std::vector<float> list;
+    if (idx != 1)
+    {
+        for (const auto & p : allPerson)
+        {
+            list.emplace_back(p.Data().at(idx - 2));
+        }
+    }
+    else
+    {
+        for (const auto & p : allPerson)
+        {
+            list.emplace_back(MapList()[p.Diagnosis()]);
+        }
+    }
+    return list;
+}

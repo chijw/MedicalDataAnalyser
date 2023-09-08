@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "histogram.h"
 #include "scattergram.h"
+#include "curvegraph.h"
 #include "csvdata.h"
 //Eigen库
 #include "Eigen/Dense"
@@ -94,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionimport,&QAction::triggered,this,&MainWindow::openFile);
     connect(ui->actionDrawHistogram,&QAction::triggered,this,&MainWindow::openHistogram);
     connect(ui->actionDrawScattergram,&QAction::triggered,this,&MainWindow::openScattergram);
+    connect(ui->actionDrawCurve,&QAction::triggered,this,&MainWindow::drawCurveGraph);
     connect(this,&MainWindow::wrongOption,this,&MainWindow::wrongOptionHint);
 }
 MainWindow::~MainWindow()
@@ -185,12 +187,14 @@ void MainWindow::openScattergram()
 {
     if (tableView->selectedCnt() == 2)
     {
-        std::vector<int> allIdx;
+        std::vector<std::vector<float>>numLists;
+        QStringList titles;
         foreach (int ele, tableView->SelectedColumns())
         {
-            allIdx.emplace_back(ele);
+            numLists.emplace_back(data.getColData(ele));
+            titles.emplaceBack(data.Titles().at(ele));
         }
-        Scattergram * scattergram = new Scattergram(allIdx[0], allIdx[1], data);
+        Scattergram * scattergram = new Scattergram(numLists[0], numLists[1], titles);
         bySplitter->addWidget(scattergram);
         tableView->selectedColumnClear();
     }
@@ -199,6 +203,26 @@ void MainWindow::openScattergram()
         emit wrongOption();
     }
 
+}
+void MainWindow::drawCurveGraph()
+{
+    if (tableView->selectedCnt() == 2)
+    {
+        std::vector<std::vector<float>>numLists;
+        QStringList titles;
+        foreach (int ele, tableView->SelectedColumns())
+        {
+            numLists.emplace_back(data.getColData(ele));
+            titles.emplaceBack(data.Titles().at(ele));
+        }
+        CurveGraph * curveGraph = new CurveGraph(numLists[0], numLists[1], titles);
+        curveGraph->show();
+        tableView->selectedColumnClear();
+    }
+    else
+    {
+        emit wrongOption();
+    }
 }
 void MainWindow::wrongOptionHint()
 {

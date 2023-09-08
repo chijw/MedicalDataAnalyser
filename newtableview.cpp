@@ -35,13 +35,7 @@ void NewTableView::headerClicked(int idx)
         //加入到选中栏目集合
         selectedColumns.insert(idx);
         // 更改选中列的背景颜色
-        QPalette palette = horizontalHeader()->palette();
-        qDebug() << palette;
-        palette.setColor(QPalette::Highlight, QColor(0, 0, 255));
-        palette.setColor(QPalette::HighlightedText, Qt::white);
-        horizontalHeader()->setPalette(palette);
-        qDebug() << horizontalHeader()->palette();
-        horizontalHeader()->viewport()->repaint();
+        horizontalHeader()->setStyleSheet(QString("QHeaderView::section:%1 { background-color: red;color: yellow }").arg(idx));
     }
     else
     {

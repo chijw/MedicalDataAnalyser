@@ -2,7 +2,6 @@
 #define SCATTERGRAM_H
 
 #include "QtCharts/QChartView"
-#include "csvdata.h"
 #include <QWidget>
 #include <vector>
 
@@ -10,7 +9,7 @@ class Scattergram : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Scattergram(int idxX, int idxY, CsvData data, QWidget *parent = nullptr);
+    explicit Scattergram(std::vector<float>listX, std::vector<float>listY, QStringList titles, QWidget *parent = nullptr);
     void initScattergram();
 private:
     QChart * chart;

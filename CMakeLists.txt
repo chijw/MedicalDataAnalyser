@@ -33,6 +33,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         scattergram.h scattergram.cpp
         newtableview.h newtableview.cpp
         leastsquare.hpp
+        curvegraph.h curvegraph.cpp curvegraph.ui
+
+
 
 
          )
