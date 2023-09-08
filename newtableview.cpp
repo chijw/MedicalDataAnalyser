@@ -1,5 +1,6 @@
 #include "newtableview.h"
 #include <QPalette>
+#include <QDebug>
 
 NewTableView::NewTableView(CsvData data, QWidget * parent) :
     QTableView(parent)
@@ -26,11 +27,23 @@ NewTableView::NewTableView(CsvData data, QWidget * parent) :
     selectedColumns.clear();
     //信号连接
     connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &NewTableView::headerClicked);
-
 }
 void NewTableView::headerClicked(int idx)
 {
-    if (selectedColumns.contains(idx))
+    if (!selectedColumns.contains(idx))
+    {
+        //加入到选中栏目集合
+        selectedColumns.insert(idx);
+        // 更改选中列的背景颜色
+        QPalette palette = horizontalHeader()->palette();
+        qDebug() << palette;
+        palette.setColor(QPalette::Highlight, QColor(0, 0, 255));
+        palette.setColor(QPalette::HighlightedText, Qt::white);
+        horizontalHeader()->setPalette(palette);
+        qDebug() << horizontalHeader()->palette();
+        horizontalHeader()->viewport()->repaint();
+    }
+    else
     {
         selectedColumns.remove(idx);
         // 恢复表头背景颜色
@@ -38,12 +51,16 @@ void NewTableView::headerClicked(int idx)
         palette.setColor(QPalette::Window, Qt::transparent);
         horizontalHeader()->setPalette(palette);
     }
-    else
-    {
-        selectedColumns.insert(idx);
-        // 更改选中列的背景颜色
-        QPalette palette = horizontalHeader()->palette();
-        palette.setColor(QPalette::Window, Qt::blue);
-        horizontalHeader()->setPalette(palette);
-    }
+}
+int NewTableView::selectedCnt()
+{
+    return selectedColumns.size();
+}
+void NewTableView::selectedColumnClear()
+{
+    selectedColumns.clear();
+}
+QSet<int> NewTableView::SelectedColumns()
+{
+    return selectedColumns;
 }

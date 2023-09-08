@@ -32,6 +32,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         rowfeature.cpp
         scattergram.h scattergram.cpp
         newtableview.h newtableview.cpp
+        leastsquare.hpp
 
 
          )

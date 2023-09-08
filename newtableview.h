@@ -11,8 +11,12 @@ class NewTableView : public QTableView
     Q_OBJECT
 public:
     NewTableView(CsvData data, QWidget * parent = nullptr);
+    int selectedCnt();
+    void selectedColumnClear();
+    QSet<int> SelectedColumns();
 public slots:
     void headerClicked(int);
+
 private:
     QSet<int> selectedColumns;
 };

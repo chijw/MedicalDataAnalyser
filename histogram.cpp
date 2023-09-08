@@ -82,7 +82,7 @@ Histogram::Histogram(int cursorColumnIndex, CsvData data, QWidget *parent) :
             for (int i = 0; i <= labelNum; ++i)
             {
                 float val = minValue + i * diff;
-                axisX->append(QString::number(val),i * col / labelNum);
+                axisX->append(QString::number(val), i * col / labelNum);
             }
             histogramSeries->setBarWidth(1);
 

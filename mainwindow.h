@@ -27,12 +27,15 @@ public:
     void initLayout();
 signals:
     void columnSelected(int);
+    void wrongOption();
 public slots:
     void openFile();
     void handleHeaderClicked(int);
+    void wrongOptionHint();
     void getMeanVar();
     void openHistogram();
     void openScattergram();
+
 private:
     Ui::MainWindow *ui;
     CsvData data;

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "histogram.h"
+#include "scattergram.h"
 #include "csvdata.h"
 //Eigen库
 #include "Eigen/Dense"
@@ -64,6 +65,10 @@ void MainWindow::initLayout()
 */
 void MainWindow::showTableWindow()
 {
+    //一次只允许存在一个tableView
+    delete tableView;
+    tableView = nullptr;
+    //创建新的tableView
     tableView = new NewTableView(data);
     //布局控制
     leftLayout->addWidget(tableView);
@@ -73,6 +78,7 @@ void MainWindow::showTableWindow()
         cursorColumnIndex = col;
     });
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::getMeanVar);
+
 
 }
 MainWindow::MainWindow(QWidget *parent)
@@ -88,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionimport,&QAction::triggered,this,&MainWindow::openFile);
     connect(ui->actionDrawHistogram,&QAction::triggered,this,&MainWindow::openHistogram);
     connect(ui->actionDrawScattergram,&QAction::triggered,this,&MainWindow::openScattergram);
+    connect(this,&MainWindow::wrongOption,this,&MainWindow::wrongOptionHint);
 }
 MainWindow::~MainWindow()
 {
@@ -176,5 +183,26 @@ void MainWindow::openHistogram()
 }
 void MainWindow::openScattergram()
 {
+    if (tableView->selectedCnt() == 2)
+    {
+        std::vector<int> allIdx;
+        foreach (int ele, tableView->SelectedColumns())
+        {
+            allIdx.emplace_back(ele);
+        }
+        Scattergram * scattergram = new Scattergram(allIdx[0], allIdx[1], data);
+        bySplitter->addWidget(scattergram);
+        tableView->selectedColumnClear();
+    }
+    else
+    {
+        emit wrongOption();
+    }
 
+}
+void MainWindow::wrongOptionHint()
+{
+    int x = geometry().center().x() - 70;
+    int y = geometry().top() + 10;
+    QToolTip::showText(QPoint(x,y),"请选择正确数量的列");
 }
