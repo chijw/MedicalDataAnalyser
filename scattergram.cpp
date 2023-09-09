@@ -1,12 +1,14 @@
 #include "scattergram.h"
 
 #include <QVBoxLayout>
-#include <QScatterSeries>
 #include <QLineSeries>
 #include <QPushButton>
 #include <QValueAxis>
 #include <QInputDialog>
 #include <iostream>
+#include <QEvent>
+#include <QMouseEvent>
+#include <QToolTip>
 
 //布局处理
 void Scattergram::initScattergram()
@@ -26,13 +28,14 @@ void Scattergram::initScattergram()
     mainLayout->addLayout(chartLayout);
     mainLayout->addLayout(buttonLayout);
     connect(closeBtn, &QPushButton::clicked, [=](){
-        delete(this);
+        delete this;
     });
+
 }
 Scattergram::Scattergram(std::vector<float> listX, std::vector<float> listY, QStringList titles, QWidget *parent)
     : QWidget{parent}, numListX(listX), numListY(listY)
 {
-    QScatterSeries * scatterSeries = new QScatterSeries;
+    scatterSeries = new QScatterSeries;
     for (int i = 0; i < numListX.size(); ++i)
     {
         scatterSeries->append(numListX[i],numListY[i]);

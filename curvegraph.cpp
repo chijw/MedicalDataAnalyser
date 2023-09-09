@@ -23,12 +23,12 @@ CurveGraph::CurveGraph(std::vector<float> ListX, std::vector<float> ListY, QStri
     int inDegree = QInputDialog::getInt(nullptr,"设置","设置多项式阶数：",3,1,10);
     auto res = fitLeastSquareAndPR(numListX, numListY, inDegree);
     auto coefficientList = std::get<0>(res);
-    QValueAxis * axisX = new QValueAxis;
-    QValueAxis * axisY = new QValueAxis;
     float xMinValue = * std::min_element(numListX.begin(), numListX.end());
     float xMaxValue = * std::max_element(numListX.begin(), numListX.end());
     float yMinValue = * std::min_element(numListY.begin(), numListY.end());
     float yMaxValue = * std::max_element(numListY.begin(), numListY.end());
+    QValueAxis * axisX = new QValueAxis;
+    QValueAxis * axisY = new QValueAxis;
     QLineSeries * lineSeries = new QLineSeries;
     lineSeries->setName(QString("多项式阶数：%1").arg(inDegree));
     //加入51个点

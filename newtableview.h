@@ -19,6 +19,8 @@ public slots:
 
 private:
     QSet<int> selectedColumns;
+    QStandardItemModel * model;
+    QFont initFont;
 };
 
 #endif // NEWTABLEVIEW_H

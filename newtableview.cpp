@@ -5,8 +5,9 @@
 NewTableView::NewTableView(CsvData data, QWidget * parent) :
     QTableView(parent)
 {
-    QStandardItemModel * model = new QStandardItemModel;
+    model = new QStandardItemModel;
     model->setHorizontalHeaderLabels(data.Titles());
+    initFont = model->horizontalHeaderItem(0)->font();
     for (auto & p : data.AllPerson())
     {
         QVector<QStandardItem *> itemRow;
@@ -34,16 +35,18 @@ void NewTableView::headerClicked(int idx)
     {
         //加入到选中栏目集合
         selectedColumns.insert(idx);
-        // 更改选中列的背景颜色
-        horizontalHeader()->setStyleSheet(QString("QHeaderView::section:%1 { background-color: red;color: yellow }").arg(idx));
+        // 更改选中列的字体样式
+        QFont font = initFont;
+        font.setItalic(true);
+        font.setBold(true);
+        model->horizontalHeaderItem(idx)->setFont(font);
+            //setStyleSheet(QString("QHeaderView::section:checked:horizontal{background:red;}"));
     }
     else
     {
         selectedColumns.remove(idx);
-        // 恢复表头背景颜色
-        QPalette palette = horizontalHeader()->palette();
-        palette.setColor(QPalette::Window, Qt::transparent);
-        horizontalHeader()->setPalette(palette);
+        // 恢复选中列的字体样式
+        model->horizontalHeaderItem(idx)->setFont(initFont);
     }
 }
 int NewTableView::selectedCnt()

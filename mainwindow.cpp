@@ -196,7 +196,6 @@ void MainWindow::openScattergram()
         }
         Scattergram * scattergram = new Scattergram(numLists[0], numLists[1], titles);
         bySplitter->addWidget(scattergram);
-        tableView->selectedColumnClear();
     }
     else
     {
@@ -217,7 +216,6 @@ void MainWindow::drawCurveGraph()
         }
         CurveGraph * curveGraph = new CurveGraph(numLists[0], numLists[1], titles);
         curveGraph->show();
-        tableView->selectedColumnClear();
     }
     else
     {

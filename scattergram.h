@@ -4,6 +4,7 @@
 #include "QtCharts/QChartView"
 #include <QWidget>
 #include <vector>
+#include <QScatterSeries>
 
 class Scattergram : public QWidget
 {
@@ -11,7 +12,9 @@ class Scattergram : public QWidget
 public:
     explicit Scattergram(std::vector<float>listX, std::vector<float>listY, QStringList titles, QWidget *parent = nullptr);
     void initScattergram();
+
 private:
+    QScatterSeries * scatterSeries;
     QChart * chart;
     QChartView * chartView;
     std::vector<float> numListX;
