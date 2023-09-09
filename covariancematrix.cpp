@@ -1,5 +1,6 @@
 #include "covariancematrix.h"
 #include "ui_covariancematrix.h"
+#include "colorbar.h"
 //Eigen库
 #include "covariance.hpp"
 #include "Eigen/Dense"
@@ -28,7 +29,7 @@ CovarianceMatrix::CovarianceMatrix(std::vector<std::vector<float>>numLists, QStr
         ui->horizontalLayout->addWidget(label);
         ui->horizontalLayout->addSpacerItem(backSpacer);
     }
-    //设置表格规格和填充模式；设置单元格不可编辑
+    //设置表格规格和填充模式；设置单元格不可编辑、不可填充
     ui->matrix->setRowCount(size);
     ui->matrix->setColumnCount(size);
     ui->matrix->horizontalHeader()->setVisible(false);
@@ -36,31 +37,26 @@ CovarianceMatrix::CovarianceMatrix(std::vector<std::vector<float>>numLists, QStr
     ui->matrix->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->matrix->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->matrix->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->matrix->setSelectionMode(QAbstractItemView::NoSelection);
     auto cov = getCovariance(numLists);
+    float minValue = round(cov(0,0) * 100) / 100.0;
+    float maxValue = round(cov(0,0) * 100) / 100.0;
     for (int i = 0; i < size; ++i)
     {
         for (int j = 0; j < size; ++j)
         {
             //保留两位小数
             float val = round(cov(i, j) * 100) / 100.0;
+            //更新最大、最小值
+            minValue = std::min(minValue, val);
+            maxValue = std::max(maxValue, val);
             QTableWidgetItem *item = new QTableWidgetItem(QString::number(val));
             item->setTextAlignment(Qt::AlignCenter);
             ui->matrix->setItem(i, j, item);
         }
     }
-    //创建colorBar
-//    QLinearGradient gr;
-//    gr.setColorAt(0.0, Qt::red);
-//    gr.setColorAt(1.0, Qt::yellow);
-    QFrame *colorRect = new QFrame();
-    QLinearGradient gradient(0, 0, 0, colorRect->height());
-    gradient.setColorAt(0.0, Qt::yellow);
-    gradient.setColorAt(0.5, Qt::red);
-    gradient.setColorAt(1.0, Qt::green);
-    colorRect->setFrameStyle(QFrame::Box);
-    colorRect->setFrameShadow(QFrame::Plain);
-    colorRect->setStyleSheet(QString("background-color: %1;").arg(gradient.stops().first().second.name()));
-    ui->colorLayout->addWidget(colorRect);
+    ColorBar * colorBar = new ColorBar(minValue, maxValue);
+    ui->colorLayout->addWidget(colorBar);
 }
 
 CovarianceMatrix::~CovarianceMatrix()
