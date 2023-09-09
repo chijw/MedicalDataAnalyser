@@ -39,6 +39,7 @@
     <addaction name="separator"/>
     <addaction name="actionDrawScattergram"/>
     <addaction name="actionDrawCurve"/>
+    <addaction name="actionDrawCovarianceMatrix"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -62,6 +63,11 @@
   <action name="actionDrawCurve">
    <property name="text">
     <string>曲线图(拟合)</string>
+   </property>
+  </action>
+  <action name="actionDrawCovarianceMatrix">
+   <property name="text">
+    <string>协方差矩阵</string>
    </property>
   </action>
  </widget>

@@ -36,6 +36,7 @@ public slots:
     void openHistogram();
     void openScattergram();
     void drawCurveGraph();
+    void drawCovarianceMatrix();
 private:
     Ui::MainWindow *ui;
     CsvData data;

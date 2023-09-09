@@ -20,8 +20,11 @@ CurveGraph::CurveGraph(std::vector<float> ListX, std::vector<float> ListY, QStri
     chartView->setRenderHint(QPainter::Antialiasing);
     ui->spinBox->setRange(1,10);
     ui->spinBox->setValue(3);
+    ui->showCoefficient->setText("p : -     r2 : -");
     int inDegree = QInputDialog::getInt(nullptr,"设置","设置多项式阶数：",3,1,10);
     auto res = fitLeastSquareAndPR(numListX, numListY, inDegree);
+    float p = std::get<1>(res);
+    float r2 = std::get<2>(res);
     auto coefficientList = std::get<0>(res);
     float xMinValue = * std::min_element(numListX.begin(), numListX.end());
     float xMaxValue = * std::max_element(numListX.begin(), numListX.end());
@@ -55,9 +58,11 @@ CurveGraph::CurveGraph(std::vector<float> ListX, std::vector<float> ListY, QStri
     lineSeries->attachAxis(axisX);
     lineSeries->attachAxis(axisY);
 
-
     ui->chartLayout->addWidget(chartView);
-    connect(ui->fitFunction,&QPushButton::clicked,this,&CurveGraph::setLevel);
+    connect(ui->fitFunction, &QPushButton::clicked,this,&CurveGraph::setLevel);
+    connect(ui->calCoefficient, &QPushButton::clicked, this, [=](){
+        ui->showCoefficient->setText(QString("p : %1     r2 : %2").arg(p).arg(r2));
+    });
 }
 
 CurveGraph::~CurveGraph()

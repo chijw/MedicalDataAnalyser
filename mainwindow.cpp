@@ -3,6 +3,7 @@
 #include "histogram.h"
 #include "scattergram.h"
 #include "curvegraph.h"
+#include "covariancematrix.h"
 #include "csvdata.h"
 //Eigen库
 #include "Eigen/Dense"
@@ -96,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionDrawHistogram,&QAction::triggered,this,&MainWindow::openHistogram);
     connect(ui->actionDrawScattergram,&QAction::triggered,this,&MainWindow::openScattergram);
     connect(ui->actionDrawCurve,&QAction::triggered,this,&MainWindow::drawCurveGraph);
+    connect(ui->actionDrawCovarianceMatrix,&QAction::triggered,this,&MainWindow::drawCovarianceMatrix);
     connect(this,&MainWindow::wrongOption,this,&MainWindow::wrongOptionHint);
 }
 MainWindow::~MainWindow()
@@ -222,6 +224,26 @@ void MainWindow::drawCurveGraph()
         emit wrongOption();
     }
 }
+void MainWindow::drawCovarianceMatrix()
+{
+    if (tableView->selectedCnt() > 1)
+    {
+        std::vector<std::vector<float>>numLists;
+        QStringList titles;
+        foreach (int ele, tableView->SelectedColumns())
+        {
+            numLists.emplace_back(data.getColData(ele));
+            titles.emplaceBack(data.Titles().at(ele));
+        }
+        CovarianceMatrix * covaMatrix = new CovarianceMatrix(numLists,titles);
+        covaMatrix->show();
+    }
+    else
+    {
+        emit wrongOption();
+    }
+}
+
 void MainWindow::wrongOptionHint()
 {
     int x = geometry().center().x() - 70;

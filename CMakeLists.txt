@@ -34,6 +34,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         newtableview.h newtableview.cpp
         leastsquare.hpp
         curvegraph.h curvegraph.cpp curvegraph.ui
+        covariancematrix.h covariancematrix.cpp covariancematrix.ui
+        covariance.hpp
+
 
 
 

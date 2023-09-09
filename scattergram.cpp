@@ -9,6 +9,10 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include <QToolTip>
+#include <QtWidgets/QGraphicsTextItem>
+#include <iostream>
+#include <algorithm>
+#include <QCursor>
 
 //布局处理
 void Scattergram::initScattergram()
@@ -35,11 +39,27 @@ void Scattergram::initScattergram()
 Scattergram::Scattergram(std::vector<float> listX, std::vector<float> listY, QStringList titles, QWidget *parent)
     : QWidget{parent}, numListX(listX), numListY(listY)
 {
+    std::vector<std::pair<float,float>> pointList;
     scatterSeries = new QScatterSeries;
     for (int i = 0; i < numListX.size(); ++i)
     {
         scatterSeries->append(numListX[i],numListY[i]);
+        pointList.emplace_back(std::make_pair(numListX[i],numListY[i]));
     }
+    std::sort(pointList.begin(), pointList.end(), [](std::pair<float,float> a, std::pair<float,float> b){
+        if (a.first > b.first)
+        {
+            return true;
+        }
+        else if (a.first < b.first)
+        {
+            return false;
+        }
+        else
+        {
+            return a.second > b.second;
+        }
+    });
     chart = new QChart;
     chart->addSeries(scatterSeries);
     QValueAxis * axisX = new QValueAxis;
@@ -59,6 +79,52 @@ Scattergram::Scattergram(std::vector<float> listX, std::vector<float> listY, QSt
     scatterSeries->attachAxis(axisY);
     chartView = new QChartView(chart);
     scatterSeries->setMarkerSize(8);
+    //创建存储重叠点的点列
+    std::vector<std::pair<float,float>>overlapPointList;
+    std::vector<int>pointCntList;
+    int sum = 0;
+    for (int i = 1; i < pointList.size(); ++i)
+    {
+        if (pointList[i] != pointList[i - 1])
+        {
+            continue;
+        }
+        int cnt = 1;
+        while((i < pointList.size())&&(pointList[i] == pointList[i - 1]))
+        {
+            ++cnt;
+            ++i;
+        }
+        overlapPointList.emplace_back(pointList[i - 1]);
+        sum += cnt;
+        pointCntList.emplace_back(cnt);
+    }
+    QString textContent(QString("共有 %1 个点重合\n").arg(sum));
+    for (int i = 0; i < overlapPointList.size(); ++i)
+    {
+        textContent += QString("(%1,%2):%3\n")
+           .arg(overlapPointList[i].first).arg(overlapPointList[i].second).arg(pointCntList[i]);
+    }
+    QLabel * label = new QLabel(chartView);
+    label->setStyleSheet("color: black; font-size: 10px;");
+    label->setText(textContent);
+    label->move(10, 10);
+    //初始化鼠标位置标签
+    posLabel = new QLabel(chartView);
+    connect(scatterSeries, &QScatterSeries::hovered, this, &Scattergram::handlePointHovered);
     initScattergram();
 }
 
+void Scattergram::handlePointHovered(QPointF point, bool state)
+{
+    if (state)
+    {
+        posLabel->setText(QString("(%1,%2)").arg(point.x()).arg(point.y()));
+        posLabel->move(chartView->width() - posLabel->width() - 20, 20);
+        posLabel->show();
+    }
+    else
+    {
+        posLabel->hide();
+    }
+}

@@ -1,6 +1,4 @@
 #include "newtableview.h"
-#include <QPalette>
-#include <QDebug>
 
 NewTableView::NewTableView(CsvData data, QWidget * parent) :
     QTableView(parent)
@@ -31,22 +29,25 @@ NewTableView::NewTableView(CsvData data, QWidget * parent) :
 }
 void NewTableView::headerClicked(int idx)
 {
-    if (!selectedColumns.contains(idx))
+    if (idx > 0)
     {
-        //加入到选中栏目集合
-        selectedColumns.insert(idx);
-        // 更改选中列的字体样式
-        QFont font = initFont;
-        font.setItalic(true);
-        font.setBold(true);
-        model->horizontalHeaderItem(idx)->setFont(font);
-            //setStyleSheet(QString("QHeaderView::section:checked:horizontal{background:red;}"));
-    }
-    else
-    {
-        selectedColumns.remove(idx);
-        // 恢复选中列的字体样式
-        model->horizontalHeaderItem(idx)->setFont(initFont);
+        if (!selectedColumns.contains(idx))
+        {
+            //加入到选中栏目集合
+            selectedColumns.insert(idx);
+            // 更改选中列的字体样式
+            QFont font = initFont;
+            font.setItalic(true);
+            font.setBold(true);
+            model->horizontalHeaderItem(idx)->setFont(font);
+                //setStyleSheet(QString("QHeaderView::section:checked:horizontal{background:red;}"));
+        }
+        else
+        {
+            selectedColumns.remove(idx);
+            // 恢复选中列的字体样式
+            model->horizontalHeaderItem(idx)->setFont(initFont);
+        }
     }
 }
 int NewTableView::selectedCnt()

@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <vector>
 #include <QScatterSeries>
+#include <QLabel>
 
 class Scattergram : public QWidget
 {
@@ -12,11 +13,13 @@ class Scattergram : public QWidget
 public:
     explicit Scattergram(std::vector<float>listX, std::vector<float>listY, QStringList titles, QWidget *parent = nullptr);
     void initScattergram();
-
+public slots:
+    void handlePointHovered(QPointF, bool);
 private:
     QScatterSeries * scatterSeries;
     QChart * chart;
     QChartView * chartView;
+    QLabel * posLabel;
     std::vector<float> numListX;
     std::vector<float> numListY;
 };

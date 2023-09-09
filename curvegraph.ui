@@ -29,6 +29,27 @@
     <item>
      <layout class="QHBoxLayout" name="btnLayout">
       <item>
+       <widget class="QPushButton" name="calCoefficient">
+        <property name="text">
+         <string>计算相关系数</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="showCoefficient">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
