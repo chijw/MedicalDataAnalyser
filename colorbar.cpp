@@ -29,7 +29,7 @@ QColor ColorBar::getColor(float val)
     {
         portion = (val - midValue) / (maxValue - midValue);
         H = static_cast<int>(portion * (-50) + 50);
-        S = static_cast<int>(portion * 55);
+        S = static_cast<int>(portion * 55 + 200);
         V = static_cast<int>(portion * (-105) + 255);
         tempColor.setHsv(H,S,V);
     }
@@ -42,6 +42,4 @@ QColor ColorBar::getColor(float val)
         tempColor.setHsv(H,S,V);
     }
     return tempColor;
-
-
 }

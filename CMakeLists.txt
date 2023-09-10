@@ -37,8 +37,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         covariancematrix.h covariancematrix.cpp covariancematrix.ui
         covariance.hpp
         colorbar.h colorbar.cpp
-        labelaxis.h labelaxis.cpp
+
         scalemark.h scalemark.cpp
+        covariance.cpp
+
 
 
 

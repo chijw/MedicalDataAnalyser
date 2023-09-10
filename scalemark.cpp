@@ -18,3 +18,4 @@ void ScaleMark::paintEvent(QPaintEvent * event)
         painter.drawText(0 ,10 + height() - i * height() / tickCnt, QString("-%1").arg(val));
     }
 }
+
