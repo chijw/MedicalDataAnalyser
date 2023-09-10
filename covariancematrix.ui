@@ -58,6 +58,17 @@
    </property>
    <layout class="QVBoxLayout" name="colorLayout"/>
   </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>10</y>
+     <width>51</width>
+     <height>561</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="labelLayout"/>
+  </widget>
  </widget>
  <resources/>
  <connections/>

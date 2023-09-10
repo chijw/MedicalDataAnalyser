@@ -10,6 +10,8 @@ class ColorBar : public QWidget
     Q_OBJECT
 public:
     explicit ColorBar(float minValue, float maxValue, QWidget *parent = nullptr);
+    //根据输入来返回相应的颜色
+    QColor getColor(float val);
 protected:
     void paintEvent(QPaintEvent * event) override;
 signals:

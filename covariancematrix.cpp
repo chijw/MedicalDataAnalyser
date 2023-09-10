@@ -1,6 +1,8 @@
 #include "covariancematrix.h"
 #include "ui_covariancematrix.h"
 #include "colorbar.h"
+#include "labelaxis.h"
+#include "scalemark.h"
 //Eigen库
 #include "covariance.hpp"
 #include "Eigen/Dense"
@@ -9,6 +11,7 @@
 
 #include <QLabel>
 #include <QSpacerItem>
+#include <QBrush>
 
 CovarianceMatrix::CovarianceMatrix(std::vector<std::vector<float>>numLists, QStringList titles, QWidget *parent) :
     QDialog(parent),
@@ -17,7 +20,6 @@ CovarianceMatrix::CovarianceMatrix(std::vector<std::vector<float>>numLists, QStr
     ui->setupUi(this);
     int size = numLists.size();
     //设置表格的标签
-    QLabel * label = new QLabel("test");
     for (int i = 0; i < size; ++i)
     {
         QLabel * label = new QLabel(titles[i]);
@@ -50,13 +52,25 @@ CovarianceMatrix::CovarianceMatrix(std::vector<std::vector<float>>numLists, QStr
             //更新最大、最小值
             minValue = std::min(minValue, val);
             maxValue = std::max(maxValue, val);
-            QTableWidgetItem *item = new QTableWidgetItem(QString::number(val));
-            item->setTextAlignment(Qt::AlignCenter);
-            ui->matrix->setItem(i, j, item);
         }
     }
     ColorBar * colorBar = new ColorBar(minValue, maxValue);
     ui->colorLayout->addWidget(colorBar);
+    ScaleMark * scaleMark = new ScaleMark(minValue, maxValue);
+    ui->labelLayout->addWidget(scaleMark);
+    for (int i = 0; i < size; ++i)
+    {
+        for (int j = 0; j < size; ++j)
+        {
+            //保留两位小数
+            float val = round(cov(i, j) * 100) / 100.0;
+            QTableWidgetItem *item = new QTableWidgetItem(QString::number(val));
+            QBrush brush(colorBar->getColor(val));
+            item->setBackground(brush);
+            item->setTextAlignment(Qt::AlignCenter);
+            ui->matrix->setItem(i, j, item);
+        }
+    }
 }
 
 CovarianceMatrix::~CovarianceMatrix()
