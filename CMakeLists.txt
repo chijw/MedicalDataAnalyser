@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Charts)
+find_package(Qt6 REQUIRED COMPONENTS DataVisualization)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -43,6 +44,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         pca2dgraph.h pca2dgraph.cpp pca2dgraph.ui
         pca.hpp
         pca.cpp
+        pca3dgraph.h pca3dgraph.cpp pca3dgraph.ui
+
+
+
+
+
 
 
 
@@ -71,6 +78,7 @@ endif()
 
 target_link_libraries(medicalDataAnalyser PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(medicalDataAnalyser PRIVATE Qt6::Charts)
+target_link_libraries(medicalDataAnalyser PRIVATE Qt6::DataVisualization)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

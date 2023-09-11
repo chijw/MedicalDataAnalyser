@@ -70,8 +70,10 @@ Scattergram::Scattergram(const std::vector<float>& listX, const  std::vector<flo
     float yMinValue = * std::min_element(numListY.begin(), numListY.end());
     float yMaxValue = * std::max_element(numListY.begin(), numListY.end());
     //扩充一定的显示范围
-    axisX->setRange(xMinValue / 2, xMaxValue + xMinValue / 2);
-    axisY->setRange(yMinValue / 2, yMaxValue + yMinValue / 2);
+    float xSpace = (xMaxValue - xMinValue) / 10;
+    float ySpace = (yMaxValue - yMinValue) / 10;
+    axisX->setRange(xMinValue - xSpace, xMaxValue + xSpace);
+    axisY->setRange(yMinValue - ySpace, yMaxValue + ySpace);
     axisX->setTitleText(titles[0]);
     axisY->setTitleText(titles[1]);
     chart->addAxis(axisX, Qt::AlignBottom);
@@ -109,9 +111,10 @@ Scattergram::Scattergram(const std::vector<float>& listX, const  std::vector<flo
     QLabel * label = new QLabel(chartView);
     label->setStyleSheet("color: black; font-size: 10px;");
     label->setText(textContent);
+    //显示位置挪到左上角
     label->move(10, 10);
-    //初始化鼠标位置标签
     posLabel = new QLabel(chartView);
+    //鼠标悬停时显示信息
     connect(scatterSeries, &QScatterSeries::hovered, this, &Scattergram::handlePointHovered);
     initScattergram();
 }

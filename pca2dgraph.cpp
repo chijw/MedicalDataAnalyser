@@ -6,8 +6,6 @@
 #include <iostream>
 
 #include <QScatterSeries>
-#include <QChart>
-#include <QChartView>
 #include <QValueAxis>
 #include <QBrush>
 
@@ -61,24 +59,56 @@ PCA2DGraph::PCA2DGraph(const CsvData& input, const std::vector<int>& col, QWidge
         yMinValue = std::min(res(i,1),yMinValue);
         yMaxValue = std::max(res(i,1),yMaxValue);
     }
-    QChart * chart = new QChart;
+    //初始化信息展示标签
+    posLabel = new QLabel(this);
+    posLabel->setStyleSheet("background-color : lightgray");
+    //初始化chart, chartView等组件
+    chart = new QChart;
     chart->addSeries(bScatterSeries);
     chart->addSeries(mScatterSeries);
     QValueAxis * axisX = new QValueAxis;
     QValueAxis * axisY = new QValueAxis;
-    axisX->setRange(xMinValue, xMaxValue);
-    axisY->setRange(yMinValue, yMaxValue);
+    //扩充一定的显示范围
+    float xSpace = (xMaxValue - xMinValue) / 10;
+    float ySpace = (yMaxValue - yMinValue) / 10;
+    axisX->setRange(xMinValue - xSpace, xMaxValue + xSpace);
+    axisY->setRange(yMinValue - ySpace, yMaxValue + ySpace);
     chart->addAxis(axisX, Qt::AlignBottom);
     chart->addAxis(axisY, Qt::AlignLeft);
     bScatterSeries->attachAxis(axisX);
     bScatterSeries->attachAxis(axisY);
     mScatterSeries->attachAxis(axisX);
     mScatterSeries->attachAxis(axisY);
-    QChartView * chartView = new QChartView(chart);
+    chartView = new QChartView(chart);
     ui->chartLayout->addWidget(chartView);
+    connect(bScatterSeries, &QScatterSeries::hovered, this, &PCA2DGraph::handlePointHovered);
+    connect(mScatterSeries, &QScatterSeries::hovered, this, &PCA2DGraph::handlePointHovered);
 }
 
 PCA2DGraph::~PCA2DGraph()
 {
     delete ui;
+}
+void PCA2DGraph::handlePointHovered(QPointF point, bool state)
+{
+    if (state)
+    {
+        //TODO
+        QString text = QString("(%1,%2)").arg(point.x()).arg(point.y());
+        for (int idx : columns)
+        {
+            if (idx != 1)
+            {
+
+            }
+        }
+        posLabel->setText(text);
+        QPoint curPos = mapFromGlobal(QCursor::pos());
+        posLabel->move(curPos.x() - posLabel->width() / 2, curPos.y() - posLabel->height() * 1.5);
+        posLabel->show();
+    }
+    else
+    {
+        posLabel->hide();
+    }
 }

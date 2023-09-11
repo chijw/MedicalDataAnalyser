@@ -6,6 +6,7 @@
 #include "covariancematrix.h"
 #include "csvdata.h"
 #include "pca2dgraph.h"
+#include "pca3dgraph.h"
 //Eigen库
 #include "Eigen/Dense"
 #include "rowfeature.hpp"
@@ -100,6 +101,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionDrawCurve, &QAction::triggered, this, &MainWindow::drawCurveGraph);
     connect(ui->actionDrawCovarianceMatrix, &QAction::triggered, this, &MainWindow::drawCovarianceMatrix);
     connect(ui->action2D, &QAction::triggered, this, &MainWindow::do2DPCA);
+    connect(ui->action3D, &QAction::triggered, this, &MainWindow::do3DPCA);
     connect(this,&MainWindow::wrongOption,this,&MainWindow::wrongOptionHint);
 }
 MainWindow::~MainWindow()
@@ -181,9 +183,9 @@ void MainWindow::getMeanVar()
 */
 void MainWindow::openHistogram()
 {
-    Histogram * histogram = new Histogram(cursorColumnIndex, data);
     if(cursorColumnIndex >= 1)
     {
+        Histogram * histogram = new Histogram(cursorColumnIndex, data);
         bySplitter->addWidget(histogram);
     }
 }
@@ -264,7 +266,20 @@ void MainWindow::do2DPCA()
 }
 void MainWindow::do3DPCA()
 {
-
+    if (tableView->selectedCnt() > 2)
+    {
+        std::vector<int> cols;
+        foreach (int ele, tableView->SelectedColumns())
+        {
+            cols.push_back(ele);
+        }
+        PCA3DGraph * graph_3D = new PCA3DGraph(data, cols);
+        graph_3D->show();
+    }
+    else
+    {
+        emit wrongOption();
+    }
 }
 void MainWindow::wrongOptionHint()
 {
