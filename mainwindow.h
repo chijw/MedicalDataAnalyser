@@ -37,6 +37,8 @@ public slots:
     void openScattergram();
     void drawCurveGraph();
     void drawCovarianceMatrix();
+    void do2DPCA();
+    void do3DPCA();
 private:
     Ui::MainWindow *ui;
     CsvData data;

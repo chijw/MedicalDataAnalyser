@@ -43,7 +43,7 @@ void Histogram::initHistogram()
     connect(normalDistribution,&QPushButton::clicked,this,&Histogram::drawNormalDistribution);
 
 }
-Histogram::Histogram(int cursorColumnIndex, CsvData data, QWidget *parent) :
+Histogram::Histogram(int cursorColumnIndex,const CsvData& data, QWidget *parent) :
     QWidget(parent), isNormalDistributionDrawed(false), normalDistribution(nullptr)
 {
     if (cursorColumnIndex != -1 && cursorColumnIndex != 0)

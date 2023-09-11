@@ -10,7 +10,7 @@ class NewTableView : public QTableView
 {
     Q_OBJECT
 public:
-    NewTableView(CsvData data, QWidget * parent = nullptr);
+    NewTableView(const CsvData& data, QWidget * parent = nullptr);
     int selectedCnt();
     void selectedColumnClear();
     QSet<int> SelectedColumns();

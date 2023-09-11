@@ -24,7 +24,8 @@ class CovarianceMatrix : public QDialog
 
 public:
     enum class MatrixState;
-    explicit CovarianceMatrix(std::vector<std::vector<float>>numLists, QStringList titles, QWidget *parent = nullptr);
+    explicit CovarianceMatrix(const std::vector<std::vector<float>>& numLists,
+                              const QStringList& titles, QWidget *parent = nullptr);
     ~CovarianceMatrix();
 public slots:
     void changeState();

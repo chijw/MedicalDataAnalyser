@@ -11,8 +11,8 @@ static const int tableX = 50;
 static const int tableY = 10;
 static const int tableWidth = 560;
 static const int tableHeight = 560;
-CovarianceMatrix::CovarianceMatrix(std::vector<std::vector<float>>numLists,
-                   QStringList titles, QWidget *parent) :
+CovarianceMatrix::CovarianceMatrix(const std::vector<std::vector<float>>& numLists,
+                   const QStringList& titles, QWidget *parent) :
     QDialog(parent), state(true), ui(new Ui::CovarianceMatrix)
 {
     ui->setupUi(this);
@@ -124,6 +124,10 @@ void CovarianceMatrix::changeState()
             {
                 //保留两位小数
                 float corVal = round(cor(i, j) * 100) / 100.0;
+                //回收原来的item
+                QTableWidgetItem * originalItem = ui->matrix->takeItem(i, j);
+                delete originalItem;
+                originalItem = nullptr;
                 QTableWidgetItem * corItem = new QTableWidgetItem(QString::number(corVal));
                 if (corVal > (corMaxValue + corMinValue) / 2)
                 {
@@ -149,7 +153,10 @@ void CovarianceMatrix::changeState()
             for (int j = 0; j < size; ++j)
             {
                 //保留两位小数
-              float covVal = round(cov(i, j) * 100) / 100.0;
+                float covVal = round(cov(i, j) * 100) / 100.0;
+                QTableWidgetItem * originalItem = ui->matrix->takeItem(i, j);
+                delete originalItem;
+                originalItem = nullptr;
                 QTableWidgetItem * covItem = new QTableWidgetItem(QString::number(covVal));
                 if (covVal > (covMaxValue + covMinValue) / 2)
                 {

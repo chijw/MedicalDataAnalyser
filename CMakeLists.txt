@@ -40,6 +40,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         scalemark.h scalemark.cpp
         covariance.cpp
+        pca2dgraph.h pca2dgraph.cpp pca2dgraph.ui
+        pca.hpp
+        pca.cpp
 
 
 

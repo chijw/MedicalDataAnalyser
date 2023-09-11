@@ -5,6 +5,7 @@
 #include "curvegraph.h"
 #include "covariancematrix.h"
 #include "csvdata.h"
+#include "pca2dgraph.h"
 //Eigen库
 #include "Eigen/Dense"
 #include "rowfeature.hpp"
@@ -92,12 +93,13 @@ MainWindow::MainWindow(QWidget *parent)
     resize(1200,800);
     initLayout();
     initStatusBar();
-    //打开文件
-    connect(ui->actionimport,&QAction::triggered,this,&MainWindow::openFile);
-    connect(ui->actionDrawHistogram,&QAction::triggered,this,&MainWindow::openHistogram);
-    connect(ui->actionDrawScattergram,&QAction::triggered,this,&MainWindow::openScattergram);
-    connect(ui->actionDrawCurve,&QAction::triggered,this,&MainWindow::drawCurveGraph);
-    connect(ui->actionDrawCovarianceMatrix,&QAction::triggered,this,&MainWindow::drawCovarianceMatrix);
+    //为菜单栏的各种操作绑定函数
+    connect(ui->actionimport, &QAction::triggered, this, &MainWindow::openFile);
+    connect(ui->actionDrawHistogram, &QAction::triggered, this, &MainWindow::openHistogram);
+    connect(ui->actionDrawScattergram, &QAction::triggered, this, &MainWindow::openScattergram);
+    connect(ui->actionDrawCurve, &QAction::triggered, this, &MainWindow::drawCurveGraph);
+    connect(ui->actionDrawCovarianceMatrix, &QAction::triggered, this, &MainWindow::drawCovarianceMatrix);
+    connect(ui->action2D, &QAction::triggered, this, &MainWindow::do2DPCA);
     connect(this,&MainWindow::wrongOption,this,&MainWindow::wrongOptionHint);
 }
 MainWindow::~MainWindow()
@@ -243,7 +245,27 @@ void MainWindow::drawCovarianceMatrix()
         emit wrongOption();
     }
 }
+void MainWindow::do2DPCA()
+{
+    if (tableView->selectedCnt() > 1)
+    {
+        std::vector<int> cols;
+        foreach (int ele, tableView->SelectedColumns())
+        {
+            cols.push_back(ele);
+        }
+        PCA2DGraph * graph_2D = new PCA2DGraph(data, cols);
+        graph_2D->show();
+    }
+    else
+    {
+        emit wrongOption();
+    }
+}
+void MainWindow::do3DPCA()
+{
 
+}
 void MainWindow::wrongOptionHint()
 {
     int x = geometry().center().x() - 70;

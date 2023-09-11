@@ -19,7 +19,7 @@ class Histogram : public QWidget
     Q_OBJECT
 
 public:
-    explicit Histogram(int cursorColumnIndex, CsvData data,  QWidget *parent = nullptr);
+    explicit Histogram(int cursorColumnIndex, const CsvData& data,  QWidget *parent = nullptr);
     ~Histogram();
     void initHistogram();
     void drawNormalDistribution();

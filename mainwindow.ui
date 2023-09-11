@@ -35,11 +35,19 @@
     <property name="title">
      <string>绘图</string>
     </property>
+    <widget class="QMenu" name="menu_3">
+     <property name="title">
+      <string>降维绘制</string>
+     </property>
+     <addaction name="action2D"/>
+     <addaction name="action3D"/>
+    </widget>
     <addaction name="actionDrawHistogram"/>
     <addaction name="separator"/>
     <addaction name="actionDrawScattergram"/>
     <addaction name="actionDrawCurve"/>
     <addaction name="actionDrawCovarianceMatrix"/>
+    <addaction name="menu_3"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -68,6 +76,16 @@
   <action name="actionDrawCovarianceMatrix">
    <property name="text">
     <string>协方差矩阵</string>
+   </property>
+  </action>
+  <action name="action2D">
+   <property name="text">
+    <string>2D</string>
+   </property>
+  </action>
+  <action name="action3D">
+   <property name="text">
+    <string>3D</string>
    </property>
   </action>
  </widget>

@@ -11,7 +11,8 @@
 #include <QInputDialog>
 #include <QValueAxis>
 
-CurveGraph::CurveGraph(std::vector<float> ListX, std::vector<float> ListY, QStringList titles, QWidget *parent) :
+CurveGraph::CurveGraph(const std::vector<float>& ListX, const std::vector<float>& ListY,
+                       const QStringList& titles, QWidget *parent) :
     QDialog(parent), numListX(ListX), numListY(ListY), ui(new Ui::CurveGraph)
 {
     ui->setupUi(this);

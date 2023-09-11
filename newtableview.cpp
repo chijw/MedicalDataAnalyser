@@ -1,6 +1,6 @@
 #include "newtableview.h"
 
-NewTableView::NewTableView(CsvData data, QWidget * parent) :
+NewTableView::NewTableView(const CsvData& data, QWidget * parent) :
     QTableView(parent)
 {
     model = new QStandardItemModel;

@@ -15,7 +15,8 @@ class CurveGraph : public QDialog
     Q_OBJECT
 
 public:
-    explicit CurveGraph(std::vector<float> ListX, std::vector<float> ListY,QStringList titles, QWidget *parent = nullptr);
+    explicit CurveGraph(const std::vector<float>& ListX,const std::vector<float>& ListY,
+                        const QStringList& titles, QWidget *parent = nullptr);
     ~CurveGraph();
 public slots:
     void setLevel();

@@ -36,7 +36,8 @@ void Scattergram::initScattergram()
     });
 
 }
-Scattergram::Scattergram(std::vector<float> listX, std::vector<float> listY, QStringList titles, QWidget *parent)
+Scattergram::Scattergram(const std::vector<float>& listX, const  std::vector<float>& listY,
+                         const QStringList& titles, QWidget *parent)
     : QWidget{parent}, numListX(listX), numListY(listY)
 {
     std::vector<std::pair<float,float>> pointList;

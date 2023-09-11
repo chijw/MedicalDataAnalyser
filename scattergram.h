@@ -11,7 +11,8 @@ class Scattergram : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Scattergram(std::vector<float>listX, std::vector<float>listY, QStringList titles, QWidget *parent = nullptr);
+    explicit Scattergram(const std::vector<float>& listX, const std::vector<float>&listY,
+                         const QStringList& titles, QWidget *parent = nullptr);
     void initScattergram();
 public slots:
     void handlePointHovered(QPointF, bool);
