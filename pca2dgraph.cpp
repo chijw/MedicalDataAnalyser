@@ -35,31 +35,45 @@ PCA2DGraph::PCA2DGraph(const CsvData& input, const std::vector<int>& col, QWidge
         attr.emplace_back(data.MapList()[p.Diagnosis()]);
     }
     auto res = pca(originMatrix, 2);
-    QScatterSeries * scatterSeries = new QScatterSeries;
+    QScatterSeries * bScatterSeries = new QScatterSeries;
+    QScatterSeries * mScatterSeries = new QScatterSeries;
+    bScatterSeries->setName("benign");
+    mScatterSeries->setName("malignant");
+    bScatterSeries->setColor(QColor(0,0,0));
+    mScatterSeries->setColor(QColor(255,0,0));
+    bScatterSeries->setMarkerSize(8);
+    mScatterSeries->setMarkerSize(8);
     //求x轴、y轴的上下界
     float xMinValue = res(0,0), xMaxValue = res(0,0);
     float yMinValue = res(0,1), yMaxValue = res(0,1);
-    QBrush BBrush(QColor(0,0,0)), MBrush(QColor(255,0,0));
     for (int i = 0; i < data.AllPerson().size(); ++i)
     {
-        //TODO
-        scatterSeries->append(res(i, 0), res(i, 1));
-
+        if (!attr[i])
+        {
+            bScatterSeries->append(res(i, 0), res(i, 1));
+        }
+        else
+        {
+            mScatterSeries->append(res(i, 0), res(i, 1));
+        }
         xMinValue = std::min(res(i,0),xMinValue);
         xMaxValue = std::max(res(i,0),xMaxValue);
         yMinValue = std::min(res(i,1),yMinValue);
         yMaxValue = std::max(res(i,1),yMaxValue);
     }
     QChart * chart = new QChart;
-    chart->addSeries(scatterSeries);
+    chart->addSeries(bScatterSeries);
+    chart->addSeries(mScatterSeries);
     QValueAxis * axisX = new QValueAxis;
     QValueAxis * axisY = new QValueAxis;
     axisX->setRange(xMinValue, xMaxValue);
     axisY->setRange(yMinValue, yMaxValue);
     chart->addAxis(axisX, Qt::AlignBottom);
     chart->addAxis(axisY, Qt::AlignLeft);
-    scatterSeries->attachAxis(axisX);
-    scatterSeries->attachAxis(axisY);
+    bScatterSeries->attachAxis(axisX);
+    bScatterSeries->attachAxis(axisY);
+    mScatterSeries->attachAxis(axisX);
+    mScatterSeries->attachAxis(axisY);
     QChartView * chartView = new QChartView(chart);
     ui->chartLayout->addWidget(chartView);
 }
