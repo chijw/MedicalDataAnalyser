@@ -21,6 +21,10 @@ public:
     PersonList AllPerson() const;
     const QMap<QString,int> MapList() const;
     std::vector<float> getColData(int idx) const;
+    void setTypeList(std::vector<int> list);
+    std::vector<int> TypeList() const;
+    void setIsClustered(bool flag);
+    bool IsClustered() const;
 private:
     //存放数据的名称
     QStringList titles;
@@ -30,6 +34,9 @@ private:
     static const QMap<QString,int> mapList;
     //是否读取到不当数据
     bool isValid;
+    std::vector<int> typeList;
+    //记录是否被聚类分析过
+    bool isClustered;
 };
 
 #endif // CSVDATA_H

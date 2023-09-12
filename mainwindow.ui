@@ -49,8 +49,15 @@
     <addaction name="actionDrawCovarianceMatrix"/>
     <addaction name="menu_3"/>
    </widget>
+   <widget class="QMenu" name="menu_4">
+    <property name="title">
+     <string>聚类分析</string>
+    </property>
+    <addaction name="actionKMeans"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
+   <addaction name="menu_4"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionimport">
@@ -86,6 +93,11 @@
   <action name="action3D">
    <property name="text">
     <string>3D</string>
+   </property>
+  </action>
+  <action name="actionKMeans">
+   <property name="text">
+    <string>KMeans</string>
    </property>
   </action>
  </widget>

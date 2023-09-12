@@ -7,6 +7,7 @@
 #include "csvdata.h"
 #include "pca2dgraph.h"
 #include "pca3dgraph.h"
+#include "kmeansalgorithm.h"
 //Eigen库
 #include "Eigen/Dense"
 #include "rowfeature.hpp"
@@ -25,6 +26,7 @@
 #include <QLabel>
 #include <QHeaderView>
 #include <QToolTip>
+#include <QInputDialog>
 
 /*
  * 编辑状态栏
@@ -32,20 +34,27 @@
 */
 void MainWindow::initStatusBar()
 {
-    QStatusBar * stBar = new QStatusBar();
+    QStatusBar * stBar = new QStatusBar;
     setStatusBar(stBar);
+
     updateButton = new QPushButton;
     updateButton->setText("更新");
     updateButton->setEnabled(false);
     stBar->addPermanentWidget(updateButton);
+
     QLabel * mean = new QLabel("均值:",this);
     stBar->addPermanentWidget(mean);
     meanValue = new QLabel("0",this);
     stBar->addPermanentWidget(meanValue);
+
     QLabel * variance = new QLabel("方差:",this);
     stBar->addPermanentWidget(variance);
     varianceValue = new QLabel("0",this);
     stBar->addPermanentWidget(varianceValue);
+
+    cluterButton = new QPushButton;
+    cluterButton->setText("显示分类");
+    stBar->addWidget(cluterButton);
 }
 /*
  * 主窗口布局创建
@@ -64,32 +73,30 @@ void MainWindow::initLayout()
     bySplitter = new QSplitter(Qt::Vertical);
     rightLayout->addWidget(bySplitter);
 }
-/* TODO
- * TODO 用读取的表格数据加载表格界面
+/*
+ * 用读取的表格数据加载表格界面
 */
 void MainWindow::showTableWindow()
 {
-    //一次只允许存在一个tableView
     if (tableView != nullptr)
     {
         delete tableView;
-        tableView = nullptr;
     }
     //创建新的tableView
-    tableView = new NewTableView(data);
+    tableView = new NewTableView(&data);
     //布局控制
     leftLayout->addWidget(tableView);
     //完成相关信号的连接
+    connect(this, &MainWindow::cluterBtnClicked, tableView, &NewTableView::showCluster);
     connect(tableView->horizontalHeader(), &QHeaderView::sectionPressed, this, &MainWindow::handleHeaderClicked);
     connect(this, &MainWindow::columnSelected, this, [=](int col){
         cursorColumnIndex = col;
     });
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::getMeanVar);
 
-
 }
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),cursorColumnIndex(-1)
+    : QMainWindow(parent), cursorColumnIndex(-1), cluterBtnState(false)
     , ui(new Ui::MainWindow)
 {
     //初始化窗口
@@ -97,6 +104,10 @@ MainWindow::MainWindow(QWidget *parent)
     resize(1200,800);
     initLayout();
     initStatusBar();
+    //创建tableView
+    tableView = new NewTableView;
+    //为显示分类绑定函数
+    connect(cluterButton, &QPushButton::clicked, this, &MainWindow::handleCluterClicked);
     //为菜单栏的各种操作绑定函数
     connect(ui->actionimport, &QAction::triggered, this, &MainWindow::openFile);
     connect(ui->actionDrawHistogram, &QAction::triggered, this, &MainWindow::openHistogram);
@@ -105,6 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionDrawCovarianceMatrix, &QAction::triggered, this, &MainWindow::drawCovarianceMatrix);
     connect(ui->action2D, &QAction::triggered, this, &MainWindow::do2DPCA);
     connect(ui->action3D, &QAction::triggered, this, &MainWindow::do3DPCA);
+    connect(ui->actionKMeans, &QAction::triggered, this, &MainWindow::KMeansCluster);
     connect(this,&MainWindow::wrongOption,this,&MainWindow::wrongOptionHint);
 }
 MainWindow::~MainWindow()
@@ -180,6 +192,22 @@ void MainWindow::getMeanVar()
     std::tuple<float, float> AvgVar = getAvgVar(row);
     meanValue->setText(QString::number(std::get<0>(AvgVar)));
     varianceValue->setText(QString::number(std::get<1>(AvgVar)));
+}
+/*
+ * 处理分类显示按钮
+*/
+void MainWindow::handleCluterClicked()
+{
+    if (!cluterBtnState)
+    {
+        cluterButton->setText("取消显示");
+    }
+    else
+    {
+        cluterButton->setText("显示分类");
+    }
+    emit cluterBtnClicked(cluterBtnState);
+    cluterBtnState = !cluterBtnState;
 }
 /*
  * 打开直方图
@@ -278,6 +306,24 @@ void MainWindow::do3DPCA()
         }
         PCA3DGraph * graph_3D = new PCA3DGraph(data, cols);
         graph_3D->show();
+    }
+    else
+    {
+        emit wrongOption();
+    }
+}
+void MainWindow::KMeansCluster()
+{
+    if (tableView->selectedCnt() > 0)
+    {
+        int k = QInputDialog::getInt(nullptr,"设置","设置类数（1-10）：",5,1,10);
+        std::vector<int> cols;
+        foreach (int ele, tableView->SelectedColumns())
+        {
+            cols.push_back(ele);
+        }
+        KMeansAlgorithm ka;
+        ka.KMeansAnalysis(&data, cols, k);
     }
     else
     {

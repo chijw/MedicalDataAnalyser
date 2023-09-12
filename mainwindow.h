@@ -28,9 +28,11 @@ public:
 signals:
     void columnSelected(int);
     void wrongOption();
+    void cluterBtnClicked(bool);
 public slots:
     void openFile();
     void handleHeaderClicked(int);
+    void handleCluterClicked();
     void wrongOptionHint();
     void getMeanVar();
     void openHistogram();
@@ -39,6 +41,7 @@ public slots:
     void drawCovarianceMatrix();
     void do2DPCA();
     void do3DPCA();
+    void KMeansCluster();
 private:
     Ui::MainWindow *ui;
     CsvData data;
@@ -50,6 +53,8 @@ private:
     QLabel * meanValue;
     QLabel * varianceValue;
     QPushButton * updateButton;
+    QPushButton * cluterButton;
+    bool cluterBtnState;
     int cursorColumnIndex;
     QSplitter * bySplitter;
 };

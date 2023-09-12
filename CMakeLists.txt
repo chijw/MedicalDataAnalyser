@@ -45,6 +45,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         pca.hpp
         pca.cpp
         pca3dgraph.h pca3dgraph.cpp pca3dgraph.ui
+        kmeans.hpp
+        kmeansalgorithm.h kmeansalgorithm.cpp
+
+
 
 
 
