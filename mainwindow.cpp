@@ -70,8 +70,11 @@ void MainWindow::initLayout()
 void MainWindow::showTableWindow()
 {
     //一次只允许存在一个tableView
-    delete tableView;
-    tableView = nullptr;
+    if (tableView != nullptr)
+    {
+        delete tableView;
+        tableView = nullptr;
+    }
     //创建新的tableView
     tableView = new NewTableView(data);
     //布局控制

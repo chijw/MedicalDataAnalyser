@@ -13,6 +13,7 @@ public:
     QString Id() const;
     QString Diagnosis() const;
     DataList Data() const;
+    void setType(int tp);
 private:
     QString id;
     QString diagnosis;
@@ -20,6 +21,7 @@ private:
     DataList data;
     //是否读取到不当数据
     bool isValid;
+    int type;
 };
 
 #endif // PERSON_H

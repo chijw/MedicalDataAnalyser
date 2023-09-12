@@ -22,7 +22,14 @@ Person::Person(QString list)
             isValid = false;
         }
     }
-
+    if (diagnosis == "B")
+    {
+        type = 0;
+    }
+    else
+    {
+        type = 1;
+    }
 }
 bool Person::IsValid() const
 {
@@ -39,4 +46,8 @@ QString Person::Diagnosis() const
 DataList Person::Data() const
 {
     return data;
+}
+void Person::setType(int tp)
+{
+    type = tp;
 }
