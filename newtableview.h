@@ -14,12 +14,15 @@ public:
     NewTableView(CsvData * input, QWidget * parent = nullptr);
     NewTableView(QWidget * parent = nullptr);
     int selectedCnt();
+    QStandardItemModel * Model() const;
     void selectedColumnClear();
     QSet<int> SelectedColumns();
     static const QColor colorList[];
 public slots:
     void headerClicked(int);
     void showCluster(bool state);
+    void addColumns(QString tittle);
+    void clearSelectedColumns();
 private:
     QSet<int> selectedColumns;
     QStandardItemModel * model;

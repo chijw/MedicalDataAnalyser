@@ -34,16 +34,16 @@ NewTableView::NewTableView(CsvData * input, QWidget * parent) :
         }
         model->appendRow(itemRow);
     }
-    this->setModel(model);
+    setModel(model);
     QItemSelectionModel * selectionModel = new QItemSelectionModel(model);
-    this->setSelectionModel(selectionModel);
+    setSelectionModel(selectionModel);
     selectedColumns = {};
     //信号连接
     connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &NewTableView::headerClicked);
 }
 void NewTableView::headerClicked(int idx)
 {
-    if (idx > 0)
+    if (idx > 0 && idx < model->columnCount() - data->IsClustered())
     {
         if (!selectedColumns.contains(idx))
         {
@@ -54,7 +54,6 @@ void NewTableView::headerClicked(int idx)
             font.setItalic(true);
             font.setBold(true);
             model->horizontalHeaderItem(idx)->setFont(font);
-
         }
         else
         {
@@ -104,4 +103,41 @@ void NewTableView::selectedColumnClear()
 QSet<int> NewTableView::SelectedColumns()
 {
     return selectedColumns;
+}
+void NewTableView::addColumns(QString tittle)
+{
+    if (data->IsClustered())
+    {
+        int colCnt = model->columnCount();
+        for (int row = 0; row < model->rowCount(); ++row)
+        {
+            model->removeColumns(colCnt - 1, row);
+        }
+    }
+    QVector<QStandardItem *> itemColumn;
+    for (int i = 0; i < model->rowCount(); ++i)
+    {
+        QStandardItem * item = new QStandardItem(QString::number(data->TypeList().at(i)));
+        item->setTextAlignment(Qt::AlignCenter);
+        itemColumn.emplaceBack(item);
+    }
+    model->appendColumn(itemColumn);
+    QStandardItem * headerItem = new QStandardItem(tittle);
+    headerItem->setTextAlignment(Qt::AlignCenter);
+    model->setHorizontalHeaderItem(model->columnCount() - 1, headerItem);
+}
+/*
+ * 清空所有被选中的列
+*/
+void NewTableView::clearSelectedColumns()
+{
+    foreach (int idx, selectedColumns)
+    {
+        model->horizontalHeaderItem(idx)->setFont(initFont);
+    }
+    selectedColumns.clear();
+}
+QStandardItemModel * NewTableView::Model() const
+{
+    return model;
 }

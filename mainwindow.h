@@ -29,6 +29,7 @@ signals:
     void columnSelected(int);
     void wrongOption();
     void cluterBtnClicked(bool);
+    void doneKMeansClusterAnalysis(QString);
 public slots:
     void openFile();
     void handleHeaderClicked(int);
@@ -53,7 +54,8 @@ private:
     QLabel * meanValue;
     QLabel * varianceValue;
     QPushButton * updateButton;
-    QPushButton * cluterButton;
+    QPushButton * clusterButton;
+    QPushButton * clearButton;
     bool cluterBtnState;
     int cursorColumnIndex;
     QSplitter * bySplitter;

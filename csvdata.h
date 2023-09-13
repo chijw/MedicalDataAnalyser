@@ -25,6 +25,7 @@ public:
     std::vector<int> TypeList() const;
     void setIsClustered(bool flag);
     bool IsClustered() const;
+    void addTitles(QString title);
 private:
     //存放数据的名称
     QStringList titles;

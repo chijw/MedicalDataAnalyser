@@ -12,7 +12,7 @@ public:
     explicit KMeansAlgorithm(QObject *parent = nullptr);
     void KMeansAnalysis(CsvData * data, const std::vector<int>& cols, int k);
 signals:
-
+    void doneKMeansClusterAnalysis(QString);
 };
 
 #endif // KMEANSALGORITHM_H

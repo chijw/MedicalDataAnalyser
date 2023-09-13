@@ -52,9 +52,13 @@ void MainWindow::initStatusBar()
     varianceValue = new QLabel("0",this);
     stBar->addPermanentWidget(varianceValue);
 
-    cluterButton = new QPushButton;
-    cluterButton->setText("显示分类");
-    stBar->addWidget(cluterButton);
+    clusterButton = new QPushButton;
+    clusterButton->setText("显示分类");
+    stBar->addWidget(clusterButton);
+
+    clearButton = new QPushButton;
+    clearButton->setText("取消选中");
+    stBar->addWidget(clearButton);
 }
 /*
  * 主窗口布局创建
@@ -93,7 +97,10 @@ void MainWindow::showTableWindow()
         cursorColumnIndex = col;
     });
     connect(updateButton, &QPushButton::clicked, this, &MainWindow::getMeanVar);
-
+    //连接kmeans聚类完成信号和增加列事件
+    connect(this, &MainWindow::doneKMeansClusterAnalysis, tableView, &NewTableView::addColumns);
+    //为取消选中列绑定函数
+    connect(clearButton, &QPushButton::clicked, tableView, &NewTableView::clearSelectedColumns);
 }
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), cursorColumnIndex(-1), cluterBtnState(false)
@@ -107,7 +114,7 @@ MainWindow::MainWindow(QWidget *parent)
     //创建tableView
     tableView = new NewTableView;
     //为显示分类绑定函数
-    connect(cluterButton, &QPushButton::clicked, this, &MainWindow::handleCluterClicked);
+    connect(clusterButton, &QPushButton::clicked, this, &MainWindow::handleCluterClicked);
     //为菜单栏的各种操作绑定函数
     connect(ui->actionimport, &QAction::triggered, this, &MainWindow::openFile);
     connect(ui->actionDrawHistogram, &QAction::triggered, this, &MainWindow::openHistogram);
@@ -175,19 +182,23 @@ void MainWindow::handleHeaderClicked(int col)
 void MainWindow::getMeanVar()
 {
     std::vector<float>row;
-    if (cursorColumnIndex != 1)
+    if (cursorColumnIndex > 1 && cursorColumnIndex < tableView->Model()->columnCount() - data.IsClustered())
     {
         for (const auto & p : data.AllPerson())
         {
             row.emplace_back(p.Data().at(cursorColumnIndex - 2));
         }
     }
-    else
+    else if (cursorColumnIndex == 1)
     {
         for (const auto & p : data.AllPerson())
         {
             row.emplace_back(data.MapList()[p.Diagnosis()]);
         }
+    }
+    else
+    {
+        return;
     }
     std::tuple<float, float> AvgVar = getAvgVar(row);
     meanValue->setText(QString::number(std::get<0>(AvgVar)));
@@ -200,11 +211,11 @@ void MainWindow::handleCluterClicked()
 {
     if (!cluterBtnState)
     {
-        cluterButton->setText("取消显示");
+        clusterButton->setText("取消显示");
     }
     else
     {
-        cluterButton->setText("显示分类");
+        clusterButton->setText("显示分类");
     }
     emit cluterBtnClicked(cluterBtnState);
     cluterBtnState = !cluterBtnState;
@@ -214,7 +225,7 @@ void MainWindow::handleCluterClicked()
 */
 void MainWindow::openHistogram()
 {
-    if(cursorColumnIndex >= 1)
+    if(cursorColumnIndex >= 1 && cursorColumnIndex < tableView->Model()->columnCount() - data.IsClustered())
     {
         Histogram * histogram = new Histogram(cursorColumnIndex, data);
         bySplitter->addWidget(histogram);
@@ -323,6 +334,8 @@ void MainWindow::KMeansCluster()
             cols.push_back(ele);
         }
         KMeansAlgorithm ka;
+        //将kmeans算法完成信号传递到主窗口
+        connect(&ka, &KMeansAlgorithm::doneKMeansClusterAnalysis, this, &MainWindow::doneKMeansClusterAnalysis);
         ka.KMeansAnalysis(&data, cols, k);
     }
     else

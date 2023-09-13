@@ -96,3 +96,7 @@ bool CsvData::IsClustered() const
 {
     return isClustered;
 }
+void CsvData::addTitles(QString title)
+{
+    titles.append(title);
+}

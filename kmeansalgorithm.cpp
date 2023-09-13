@@ -33,5 +33,6 @@ void KMeansAlgorithm::KMeansAnalysis(CsvData * data, const std::vector<int>& col
     auto res = clusterKMeans(originMatrix, k);
     std::vector<int> typeList = std::get<1>(res);
     data->setTypeList(typeList);
+    emit doneKMeansClusterAnalysis("KMeans");
     data->setIsClustered(true);
 }
